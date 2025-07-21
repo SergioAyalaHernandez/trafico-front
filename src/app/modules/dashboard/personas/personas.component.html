@@ -1,0 +1,228 @@
+<div class="container mx-auto p-4">
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="bg-pred-400 text-white p-4 flex justify-between items-center">
+      <h4 class="text-xl font-bold">Gestión de Personas</h4>
+      <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded flex items-center space-x-2" (click)="abrirModalCrear()">
+        <i class="fas fa-plus"><span>Nueva persona</span></i>
+      </button>
+    </div>
+
+    <div class="p-4">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIT</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apellidos</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Municipio</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let persona of personas" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">{{ persona.nit }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ persona.nombre }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ persona.apellidos }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ persona.municipio }}</td>
+            <td class="px-6 py-4 whitespace-nowrap flex space-x-2">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded" (click)="abrirModalVer(persona)">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded" (click)="abrirModalEditar(persona)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="bg-red-500 hover:bg-red-600 text-white p-2 rounded" (click)="abrirModalEliminar(persona)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear Persona -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalCrear">
+  <div class="max-w-md w-full mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-green-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="crearPersonaModalLabel">Crear Nueva Persona</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalCrear()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4">
+        <form [formGroup]="personaForm">
+          <div class="grid grid-cols-2 gap-4">
+          <div class="mb-4">
+            <label for="nit" class="block text-gray-700 text-sm font-medium mb-2">NIT</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="nit" formControlName="nit">
+          </div>
+          <div class="mb-4">
+            <label for="nombre" class="block text-gray-700 text-sm font-medium mb-2">Nombre</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="nombre" formControlName="nombre">
+          </div>
+          <div class="mb-4">
+            <label for="apellidos" class="block text-gray-700 text-sm font-medium mb-2">Apellidos</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="apellidos" formControlName="apellidos">
+          </div>
+          <div class="mb-4">
+            <label for="fechaNacimiento" class="block text-gray-700 text-sm font-medium mb-2">Fecha de Nacimiento</label>
+            <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="fechaNacimiento" formControlName="fechaNacimiento">
+          </div>
+          <div class="mb-4">
+            <label for="sexo" class="block text-gray-700 text-sm font-medium mb-2">Sexo</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="sexo" formControlName="sexo">
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label for="calle" class="block text-gray-700 text-sm font-medium mb-2">Calle</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="calle" formControlName="calle">
+          </div>
+          <div class="mb-4">
+            <label for="numero" class="block text-gray-700 text-sm font-medium mb-2">Número</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="numero" formControlName="numero">
+          </div>
+          <div class="mb-4">
+            <label for="municipio" class="block text-gray-700 text-sm font-medium mb-2">Municipio</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="municipio" formControlName="municipio">
+          </div>
+          <div class="mb-4">
+            <label for="provincia" class="block text-gray-700 text-sm font-medium mb-2">Provincia</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="provincia" formControlName="provincia">
+          </div>
+          <div class="mb-4">
+            <label for="codigoPostal" class="block text-gray-700 text-sm font-medium mb-2">Código Postal</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="codigoPostal" formControlName="codigoPostal">
+          </div>
+          </div>
+        </form>
+      </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end space-x-2">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalCrear()">Cancelar</button>
+        <button type="button" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded" (click)="guardarPersona()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Modal Ver Persona -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalVer">
+  <div class="max-w-md w-full mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-blue-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="verPersonaModalLabel">Detalles de Persona</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalVer()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4" *ngIf="personaSeleccionada">
+        <p class="mb-2"><span class="font-bold">NIT:</span> {{ personaSeleccionada.nit }}</p>
+        <p class="mb-2"><span class="font-bold">Nombre:</span> {{ personaSeleccionada.nombre }}</p>
+        <p class="mb-2"><span class="font-bold">Apellidos:</span> {{ personaSeleccionada.apellidos }}</p>
+        <p class="mb-2"><span class="font-bold">Fecha de Nacimiento:</span> {{ personaSeleccionada.fechaNacimiento }}</p>
+        <p class="mb-2"><span class="font-bold">Sexo:</span> {{ personaSeleccionada.sexo === 'M' ? 'Masculino' : 'Femenino' }}</p>
+        <p class="mb-2"><span class="font-bold">Dirección:</span> {{ personaSeleccionada.calle }} {{ personaSeleccionada.numero }}</p>
+        <p class="mb-2"><span class="font-bold">Municipio:</span> {{ personaSeleccionada.municipio }}</p>
+        <p class="mb-2"><span class="font-bold">Provincia:</span> {{ personaSeleccionada.provincia }}</p>
+        <p class="mb-2"><span class="font-bold">Código Postal:</span> {{ personaSeleccionada.codigoPostal }}</p>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalVer()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar Persona -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalEditar">
+  <div class="max-w-md w-full mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-yellow-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="editarPersonaModalLabel">Editar Persona</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalEditar()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4">
+        <div class="p-4">
+        <form [formGroup]="personaForm" *ngIf="personaSeleccionada">
+            <div class="grid grid-cols-2 gap-4">
+          <div class="mb-4">
+            <label for="editNombre" class="block text-gray-700 text-sm font-medium mb-2">Nombre</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editNombre" formControlName="nombre">
+          </div>
+          <div class="mb-4">
+            <label for="editApellidos" class="block text-gray-700 text-sm font-medium mb-2">Apellidos</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editApellidos" formControlName="apellidos">
+          </div>
+          <div class="mb-4">
+            <label for="editFechaNacimiento" class="block text-gray-700 text-sm font-medium mb-2">Fecha de Nacimiento</label>
+            <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editFechaNacimiento" formControlName="fechaNacimiento">
+          </div>
+          <div class="mb-4">
+            <label for="editSexo" class="block text-gray-700 text-sm font-medium mb-2">Sexo</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editSexo" formControlName="sexo">
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label for="editCalle" class="block text-gray-700 text-sm font-medium mb-2">Calle</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editCalle" formControlName="calle">
+          </div>
+          <div class="mb-4">
+            <label for="editNumero" class="block text-gray-700 text-sm font-medium mb-2">Número</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editNumero" formControlName="numero">
+          </div>
+          <div class="mb-4">
+            <label for="editMunicipio" class="block text-gray-700 text-sm font-medium mb-2">Municipio</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editMunicipio" formControlName="municipio">
+          </div>
+          <div class="mb-4">
+            <label for="editProvincia" class="block text-gray-700 text-sm font-medium mb-2">Provincia</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editProvincia" formControlName="provincia">
+          </div>
+          <div class="mb-4">
+            <label for="editCodigoPostal" class="block text-gray-700 text-sm font-medium mb-2">Código Postal</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editCodigoPostal" formControlName="codigoPostal">
+          </div>
+            </div>
+        </form>
+      </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end space-x-2">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalEditar()">Cancelar</button>
+        <button type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded" (click)="actualizarPersona()">Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Eliminar Persona -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalEliminar">
+  <div class="max-w-md w-full mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-red-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="eliminarPersonaModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalEliminar()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4" *ngIf="personaSeleccionada">
+        <p class="mb-2">¿Está seguro que desea eliminar a <span class="font-bold">{{ personaSeleccionada.nombre }} {{ personaSeleccionada.apellidos }}</span>?</p>
+        <p class="text-red-500">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end space-x-2">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded" (click)="confirmarEliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>

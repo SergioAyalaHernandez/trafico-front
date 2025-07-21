@@ -1,0 +1,149 @@
+<div class="container mx-auto p-4">  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="bg-pred-400 text-white p-4 flex justify-between items-center">
+      <h4 class="text-xl font-bold">Gestión de Marcas</h4>
+      <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded flex items-center space-x-2" (click)="abrirModalCrear()">
+        <i class="fas fa-plus"><span>Nueva marca</span></i>
+      </button>
+    </div>
+
+    <div class="p-4">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let marca of marcas" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">{{ marca.id }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ marca.nombre }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ marca.direccionSocial }}</td>
+            <td class="px-6 py-4 whitespace-nowrap flex space-x-2">
+
+
+            <!-- Botones en la tabla -->
+            <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded" (click)="abrirModalVer(marca)">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded" (click)="abrirModalEditar(marca)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="bg-red-500 hover:bg-red-600 text-white p-2 rounded" (click)="abrirModalEliminar(marca)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear Marca -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalCrear">
+  <div class="max-w-md w-full mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-green-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="crearMarcaModalLabel">Crear Nueva Marca</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalCrear()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4">
+        <form [formGroup]="marcaForm">
+          <div class="mb-4">
+            <label for="nombre" class="block text-gray-700 text-sm font-medium mb-2">Nombre</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="nombre" formControlName="nombre">
+          </div>
+          <div class="mb-4">
+            <label for="direccionSocial" class="block text-gray-700 text-sm font-medium mb-2">Dirección Social</label>
+            <textarea class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="direccionSocial" formControlName="direccionSocial"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end space-x-2">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalCrear()">Cancelar</button>
+        <button type="button" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded" (click)="guardarMarca()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Marca -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalVer">
+  <div class="max-w-md w-full mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-blue-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="verMarcaModalLabel">Detalles de Marca</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalVer()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4" *ngIf="marcaSeleccionada">
+        <p class="mb-2"><span class="font-bold">ID:</span> {{ marcaSeleccionada.id }}</p>
+        <p class="mb-2"><span class="font-bold">Nombre:</span> {{ marcaSeleccionada.nombre }}</p>
+        <p class="mb-2"><span class="font-bold">Descripción:</span> {{ marcaSeleccionada.direccionSocial }}</p>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalVer()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar Marca -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalEditar">
+  <div class="max-w-md w-full mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-yellow-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="editarMarcaModalLabel">Editar Marca</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalEditar()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4">
+        <form [formGroup]="marcaForm" *ngIf="marcaSeleccionada">
+          <div class="mb-4">
+            <label for="editNombre" class="block text-gray-700 text-sm font-medium mb-2">Nombre</label>
+            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editNombre" formControlName="nombre">
+          </div>
+          <div class="mb-4">
+            <label for="editDescripcion" class="block text-gray-700 text-sm font-medium mb-2">Descripción</label>
+            <textarea class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="editDescripcion" formControlName="descripcion"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end space-x-2">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalEditar()">Cancelar</button>
+        <button type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded" (click)="actualizarMarca()">Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Eliminar Marca -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalEliminar">
+  <div class="max-w-md w-full mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-red-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="eliminarMarcaModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalEliminar()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4" *ngIf="marcaSeleccionada">
+        <p class="mb-2">¿Está seguro que desea eliminar la marca <span class="font-bold">{{ marcaSeleccionada.nombre }}</span>?</p>
+        <p class="text-red-500">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end space-x-2">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded" (click)="confirmarEliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
