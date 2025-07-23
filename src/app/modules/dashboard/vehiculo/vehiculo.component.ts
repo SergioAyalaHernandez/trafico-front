@@ -22,10 +22,12 @@ export class VehiculoComponent implements OnInit {
   personaEncontrada: Persona | null = null;
   personaNoEncontrada = false;
   bastidorVerificado: boolean = false;
+  matriculaVerificado: boolean = false;
   mostrarModalCambiarPropietario = false;
   nuevoPropietarioNit: string = '';
   nuevoPersonaEncontrada: any = null;
   nuevoPersonaNoEncontrada = false;
+  matriculaExistente: boolean = false;
 
   modelos: any[] = [];
   marcas: Marca[] = [];
@@ -186,6 +188,26 @@ export class VehiculoComponent implements OnInit {
         } else {
           console.error('Error al buscar el vehículo:', error);
           this.bastidorVerificado = false;
+        }
+      }
+    });
+  }
+
+  buscarVehiculoPorMatricula(matricula: string) {
+    if (!matricula) return;
+
+    this.vehiculoService.obtenerVehiculoPorMatricula(matricula).subscribe({
+      next: (vehiculo) => {
+        this.vehiculoSeleccionado = vehiculo;
+        this.matriculaVerificado = true; // Marcar como verificado
+      },
+      error: (error) => {
+        if (error.status === 404) {
+          this.vehiculoSeleccionado = null;
+          this.matriculaVerificado = true;
+        } else {
+          console.error('Error al buscar el vehículo:', error);
+          this.matriculaVerificado = false;
         }
       }
     });

@@ -4,6 +4,9 @@ import {MarcaComponent} from "./modules/dashboard/marca/marca.component";
 import {ModeloComponent} from "./modules/dashboard/modelo/modelo.component";
 import {PersonasComponent} from "./modules/dashboard/personas/personas.component";
 import {VehiculoComponent} from "./modules/dashboard/vehiculo/vehiculo.component";
+import {UnidadtransitoComponent} from "./modules/dashboard/unidadtransito/unidadtransito.component";
+import {AgentetransitoComponent} from "./modules/dashboard/agentetransito/agentetransito.component";
+import {InfraccionComponent} from "./modules/dashboard/infraccion/infraccion.component";
 
 const routes: Routes = [
   {
@@ -21,6 +24,18 @@ const routes: Routes = [
   {
     path: 'vehiculos',
     component: VehiculoComponent
+  },
+  {
+    path: 'unidad-transito',
+    component: UnidadtransitoComponent
+  },
+  {
+    path: 'agente-transito',
+    component: AgentetransitoComponent
+  },
+  {
+    path: 'infraccion-transito',
+    component: InfraccionComponent
   },
 ];
 

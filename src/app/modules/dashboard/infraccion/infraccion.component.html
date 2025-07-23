@@ -1,0 +1,248 @@
+<div class="container mx-auto p-4">
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="bg-pred-600 text-white p-4 flex justify-between items-center">
+      <h4 class="text-xl font-bold">Gestión de Infracciones</h4>
+      <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded flex items-center space-x-2"
+              (click)="abrirModalCrear()">
+        <i class="fas fa-plus"></i><span class="ml-1">Nueva infracción</span>
+      </button>
+    </div>
+
+    <div class="p-4">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expediente</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agente</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lugar</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Infractor</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let infraccion of infracciones" class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">{{ infraccion.numeroExpediente }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ infraccion.fecha | date:'dd/MM/yyyy' }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ infraccion.agente.persona.nombre }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ infraccion.direccion }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ infraccion.persona.nombre }}</td>
+            <td class="px-6 py-4 whitespace-nowrap flex space-x-2">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded" (click)="abrirModalVer(infraccion)">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded"
+                      (click)="abrirModalEditar(infraccion)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="bg-red-500 hover:bg-red-600 text-white p-2 rounded"
+                      (click)="abrirModalEliminar(infraccion)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear Infracción -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalCrear">
+  <div class="max-w-6xl w-full mx-auto max-h-[90vh]">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
+      <div class="bg-green-500 text-white px-4 py-3 flex justify-between items-center">
+        <h5 class="text-lg font-bold" id="crearInfraccionModalLabel">Crear Nueva Infracción</h5>
+        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalCrear()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-4 overflow-y-auto" style="max-height: calc(90vh - 130px);">
+        <form [formGroup]="infraccionForm">
+          <!-- Secciones en pestañas o con títulos claros -->
+          <div class="mb-4 border-b border-gray-200 pb-2">
+            <h3 class="text-lg font-semibold text-gray-800">Información básica</h3>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4">
+            <!-- Columna 1: Información básica -->
+            <div>
+
+              <div class="mb-4">
+                <label for="fecha" class="block text-gray-700 text-sm font-medium mb-2">Fecha</label>
+                <input type="date"
+                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       id="fecha" formControlName="fecha">
+              </div>
+
+              <div class="mb-4">
+                <label for="estado" class="block text-gray-700 text-sm font-medium mb-2">Estado</label>
+                <select
+                  class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  id="estado" formControlName="estado">
+                  <option value="Activo">Activo</option>
+                  <option value="Pagado">Pagado</option>
+                  <option value="Anulado">Anulado</option>
+                  <option value="En proceso">En proceso</option>
+                </select>
+              </div>
+
+              <div class="mb-4">
+                <label for="importe" class="block text-gray-700 text-sm font-medium mb-2">Importe</label>
+                <input type="number"
+                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       id="importe" formControlName="importe">
+              </div>
+            </div>
+
+            <!-- Columna 2: Información del agente y ubicación -->
+            <div>
+              <div class="mb-4">
+                <label for="agenteId" class="block text-gray-700 text-sm font-medium mb-2">ID Agente</label>
+                <div class="flex items-center">
+                  <div class="flex space-x-2 mr-2" *ngIf="!agenteSeleccionado">
+                    <input type="text"
+                           class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           id="agenteId" formControlName="agenteId">
+                    <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded"
+                            (click)="buscarAgentePorId()">Buscar
+                    </button>
+                  </div>
+                  <div *ngIf="agenteSeleccionado" class="text-sm text-gray-600 ml-2 bg-gray-100 px-3 py-2 rounded">
+                    {{ agenteSeleccionado.persona.nombre }} {{ agenteSeleccionado.persona.apellidos }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="carretera" class="block text-gray-700 text-sm font-medium mb-2">Carretera</label>
+                <input type="text"
+                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       id="carretera" formControlName="carretera">
+              </div>
+
+              <div class="mb-4">
+                <label for="kilometro" class="block text-gray-700 text-sm font-medium mb-2">Kilómetro</label>
+                <input type="text"
+                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       id="kilometro" formControlName="kilometro">
+              </div>
+            </div>
+
+            <!-- Columna 3: Información del infractor -->
+            <div>
+              <div class="mb-4">
+                <label for="personaId" class="block text-gray-700 text-sm font-medium mb-2">NIT Infractor</label>
+                <div class="flex items-center">
+                  <div class="flex space-x-2 mr-2" *ngIf="!personaSeleccionada">
+                    <input type="text"
+                           class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           id="personaId" formControlName="personaId">
+                    <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded"
+                            (click)="buscarPersonaPorNit()">Buscar
+                    </button>
+                  </div>
+                  <div *ngIf="personaSeleccionada" class="text-sm text-gray-600 ml-2 bg-gray-100 px-3 py-2 rounded">
+                    {{ personaSeleccionada.nombre }} {{ personaSeleccionada.apellidos }}
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="mb-4">
+                <label for="direccion" class="block text-gray-700 text-sm font-medium mb-2">Dirección</label>
+                <input type="text"
+                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       id="direccion" formControlName="direccion">
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección de vehículo -->
+          <div class="mb-4 mt-6 border-b border-gray-200 pb-2">
+            <h3 class="text-lg font-semibold text-gray-800">Información del vehículo</h3>
+          </div>
+
+          <div class="mb-4">
+            <div class="mb-4">
+              <div class="flex items-center">
+                <input type="checkbox" id="conVehiculo" [(ngModel)]="mostrarSeccionVehiculo" [ngModelOptions]="{standalone: true}" class="mr-2">
+                <label for="conVehiculo" class="text-gray-700 text-sm font-medium">¿La infracción involucra un
+                  vehículo?</label>
+              </div>
+            </div>
+            </div>
+
+
+          <div class="mb-4" *ngIf="mostrarSeccionVehiculo">
+            <label for="vehiculoId" class="block text-gray-700 text-sm font-medium mb-2">Placa del vehículo</label>
+            <div class="flex items-center">
+              <div class="flex space-x-2 mr-2" *ngIf="!vehiculoSeleccionado">
+                <input type="text"
+                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       id="vehiculoId" formControlName="vehiculoId" style="text-transform: uppercase;">
+                <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded"
+                        (click)="buscarVehiculoPorPlaca()">Buscar
+                </button>
+              </div>
+              <div *ngIf="vehiculoSeleccionado" class="text-sm text-gray-600 ml-2 bg-gray-100 px-3 py-2 rounded">
+                Matricula: {{ vehiculoSeleccionado.matricula }} - Modelo: {{ vehiculoSeleccionado.modelo?.nombre }} - Modelo: {{ vehiculoSeleccionado.modelo?.marca?.nombre }}
+              </div>
+            </div>
+            <input type="hidden" formControlName="vehiculoId">
+          </div>
+
+          <!-- Sección de detalles de la infracción -->
+          <div class="mb-4 mt-6 border-b border-gray-200 pb-2">
+            <h3 class="text-lg font-semibold text-gray-800">Detalles de la infracción</h3>
+          </div>
+
+          <div class="mb-4">
+            <label for="articuloInfringido" class="block text-gray-700 text-sm font-medium mb-2">Artículo
+              Infringido</label>
+            <textarea
+              class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              id="articuloInfringido" rows="3" formControlName="articuloInfringido"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 flex justify-end space-x-2 border-t border-gray-200">
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+                (click)="cerrarModalCrear()">Cancelar
+        </button>
+        <button type="button" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                [disabled]="infraccionForm.invalid" (click)="guardarInfraccion()">Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--&lt;!&ndash; Modal Ver Infracción &ndash;&gt;-->
+<!--<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="mostrarModalVer">-->
+<!--  <div class="max-w-md w-full mx-auto">-->
+<!--    <div class="bg-white rounded-lg shadow-lg overflow-hidden">-->
+<!--      <div class="bg-blue-500 text-white px-4 py-3 flex justify-between items-center">-->
+<!--        <h5 class="text-lg font-bold" id="verInfraccionModalLabel">Detalles de Infracción</h5>-->
+<!--        <button type="button" class="text-white hover:text-gray-200" (click)="cerrarModalVer()">-->
+<!--          <span aria-hidden="true">&times;</span>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <div class="p-4" *ngIf="infraccionSeleccionada">-->
+<!--        <p class="mb-2"><span class="font-bold">Expediente:</span> {{ infraccionSeleccionada.numeroExpediente }}</p>-->
+<!--        <p class="mb-2"><span class="font-bold">Fecha:</span> {{ infraccionSeleccionada.fecha | date:'dd/MM/yyyy' }}</p>-->
+<!--        <p class="mb-2"><span class="font-bold">Hora:</span> {{ infraccionSeleccionada.hora }}</p>-->
+<!--        <p class="mb-2"><span class="font-bold">Lugar:</span> {{ infraccionSeleccionada.lugar }}</p>-->
+<!--        <p class="mb-2"><span class="font-bold">NIT Infractor:</span> {{ infraccionSeleccionada.nitInfractor }}</p>-->
+<!--        <p class="mb-2"><span class="font-bold">Nombre Infractor:</span> {{ infraccionSeleccionada.nombreInfractor }}</p>-->
+<!--        <p class="mb-2"><span class="font-bold">Descripción:</span> {{ infraccionSeleccionada.descripcion }}</p>-->
+<!--        <p class="mb-2"><span class="font-bold">Importe:</span> {{ infraccionSeleccionada.importe | currency }}</p>-->
+<!--      </div>-->
+<!--      <div class="bg-gray-50 px-4 py-3 flex justify-end">-->
+<!--        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" (click)="cerrarModalVer()">Cerrar</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->

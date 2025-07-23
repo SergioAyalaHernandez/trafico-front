@@ -30,7 +30,14 @@ export class MenuService {
       label: 'Transito',
       children: [
         { icon: 'admin', label: 'Unidad de transito', route: 'unidad-transito' },
-
+        { icon: 'admin', label: 'Agente de transito', route: 'agente-transito' },
+      ]
+    },
+    {
+      icon: 'user',
+      label: 'Multas',
+      children: [
+        { icon: 'admin', label: 'Generar infracción', route: 'infraccion-transito' },
       ]
     }
   ];

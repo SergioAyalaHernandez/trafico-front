@@ -2,7 +2,7 @@ export interface VehiculoModel {
   bastidor: string;
   matricula: string;
   fechaMatriculacion: string;
-  modelo: Modelo;
+  modelo?: Modelo | null;
   propietarios: PropiedadVehiculo[];
 }
 
@@ -20,7 +20,7 @@ export interface Marca {
 
 export interface PropiedadVehiculo {
   id: number;
-  vehiculo: VehiculoModel | null;
+  vehiculo?: VehiculoModel | null;
   propietario: Persona;
   fechaInicio: string;
   fechaFin: string | null;

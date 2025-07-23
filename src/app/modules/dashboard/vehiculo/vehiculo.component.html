@@ -26,7 +26,9 @@
             <td class="px-6 py-4 whitespace-nowrap">{{ vehiculo.modelo?.marca?.nombre }}</td>
             <td class="px-6 py-4 whitespace-nowrap">{{ vehiculo.modelo?.nombre }}</td>
             <td class="px-6 py-4 whitespace-nowrap">{{ vehiculo.fechaMatriculacion }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ vehiculo.propietarios?.at(0)?.propietario?.nombre + ' ' + vehiculo.propietarios?.at(0)?.propietario?.apellidos || 'Sin propietario' }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              {{ vehiculo.propietarios[0].propietario.nombre + ' ' + vehiculo.propietarios[0].propietario.apellidos }}
+            </td>
             <td class="px-6 py-4 whitespace-nowrap flex space-x-2">
               <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded" (click)="abrirModalVer(vehiculo)">
                 <i class="fas fa-eye"></i>
@@ -66,7 +68,7 @@
               <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-r"
                       (click)="buscarVehiculoPorBastidor(vehiculoForm.get('bastidor')?.value)"
                       [disabled]="!vehiculoForm.get('bastidor')?.value">
-                  <i class="fas fa-search"></i>
+                  <i class="fas fa-search">Buscar</i>
                 </button>
             </div>
             <div *ngIf="vehiculoForm.get('bastidor')?.value && !bastidorVerificado" class="mt-2 text-amber-500 text-sm">
@@ -108,7 +110,7 @@
             <div class="flex">
               <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-l" id="propietarioId" formControlName="propietarioId" [disabled]="!!personaEncontrada">
               <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-r" (click)="buscarPersonaPorNit(vehiculoForm.get('propietarioId')?.value)">
-                <i class="fas fa-search"></i>
+                <i class="fas fa-search">Buscar</i>
               </button>
             </div>
             <div *ngIf="personaNoEncontrada" class="mt-2 text-red-500 text-sm">
@@ -116,6 +118,27 @@
             </div>
             <div *ngIf="personaEncontrada" class="mt-2 text-green-500 text-sm">
               Persona encontrada: {{personaEncontrada.nombre}} {{personaEncontrada.apellidos}}
+            </div>
+          </div>
+          <!-- Paso 5: Matrícula (habilitado solo si el propietario está verificado) -->
+          <div class="mb-4" *ngIf="personaEncontrada">
+            <label for="matricula" class="block text-gray-700 text-sm font-medium mb-2">Matrícula <span class="text-red-500">*</span></label>
+            <div class="flex">
+              <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-l" id="matricula" formControlName="matricula">
+              <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-r"
+                      (click)="buscarVehiculoPorMatricula(vehiculoForm.get('matricula')?.value)"
+                      [disabled]="!vehiculoForm.get('matricula')?.value">
+                <i class="fas fa-search">Buscar</i>
+              </button>
+            </div>
+            <div *ngIf="vehiculoForm.get('matricula')?.value && !matriculaVerificado" class="mt-2 text-amber-500 text-sm">
+              Debes verificar la matrícula antes de continuar.
+            </div>
+            <div *ngIf="vehiculoSeleccionado" class="mt-2 text-red-500 text-sm">
+              Ya existe un vehículo con esta matrícula. No se puede usar un duplicado.
+            </div>
+            <div *ngIf="matriculaVerificado && !vehiculoSeleccionado" class="mt-2 text-green-500 text-sm">
+              Matrícula disponible. Puede guardar el vehículo.
             </div>
           </div>
         </form>
@@ -142,7 +165,9 @@
         <div class="mb-4 bg-gray-100 p-3 rounded">
           <p class="text-gray-700"><span class="font-bold">Bastidor:</span> {{ vehiculoSeleccionado.bastidor }}</p>
           <p class="text-gray-700"><span class="font-bold">Vehículo:</span> {{ vehiculoSeleccionado.modelo?.marca?.nombre }} {{ vehiculoSeleccionado.modelo?.nombre }}</p>
-          <p class="text-gray-700"><span class="font-bold">Propietario actual:</span> {{ vehiculoSeleccionado.propietarios?.at(0)?.propietario?.nombre + ' ' + vehiculoSeleccionado.propietarios?.at(0)?.propietario?.apellidos || 'Sin propietario' }}</p>
+          <p class="text-gray-700"><span class="font-bold">Propietario actual:</span>
+            {{ vehiculoSeleccionado.propietarios[0].propietario.nombre + ' ' + vehiculoSeleccionado.propietarios[0].propietario.apellidos }}
+          </p>
           </div>
 
         <div class="mb-4">
@@ -215,8 +240,8 @@
             <tbody class="bg-white divide-y divide-gray-200">
               <tr *ngFor="let propiedad of vehiculoSeleccionado.propietarios"
                   [class.bg-green-50]="propiedad.activo">
-                <td class="px-4 py-2">{{ propiedad.propietario?.nombre }} {{ propiedad.propietario?.apellidos }}</td>
-                <td class="px-4 py-2">{{ propiedad.propietario?.nit }}</td>
+                <td class="px-4 py-2">{{ propiedad.propietario.nombre }} {{ propiedad.propietario.apellidos }}</td>
+                <td class="px-4 py-2">{{ propiedad.propietario.nit }}</td>
                 <td class="px-4 py-2">{{ propiedad.fechaInicio }}</td>
                 <td class="px-4 py-2">{{ propiedad.fechaFin || 'Actual' }}</td>
                 <td class="px-4 py-2">

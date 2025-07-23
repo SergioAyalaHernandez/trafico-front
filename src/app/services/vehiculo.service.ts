@@ -26,6 +26,10 @@ export class VehiculoService {
     return this.http.get<VehiculoModel>(`${this.apiUrl}/${bastidor}`);
   }
 
+  obtenerVehiculoPorMatricula(matricula: string): Observable<VehiculoModel> {
+    return this.http.get<VehiculoModel>(`${this.apiUrl}/matricula/${matricula}`);
+  }
+
   eliminarVehiculo(bastidor: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${bastidor}`);
   }
