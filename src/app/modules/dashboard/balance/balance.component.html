@@ -1,1 +1,186 @@
-<p>balance works!</p>
+<div class="container mx-auto p-6 bg-gray-50">
+  <!-- Cabecera -->
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-blue-600">Dashboard de Infracciones de Tráfico</h1>
+  </div>
+
+  <!-- Fila de KPIs -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-lg shadow-md border-l-4 border-blue-500 overflow-hidden">
+      <div class="p-4 text-center">
+        <h5 class="text-gray-600 font-medium">Total Infracciones</h5>
+        <h2 class="text-3xl font-bold text-blue-600">{{totalInfracciones}}</h2>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md border-l-4 border-green-500 overflow-hidden">
+      <div class="p-4 text-center">
+        <h5 class="text-gray-600 font-medium">Importe Total</h5>
+        <h2 class="text-3xl font-bold text-green-600">{{importeTotal | currency:'EUR'}}</h2>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md border-l-4 border-yellow-500 overflow-hidden">
+      <div class="p-4 text-center">
+        <h5 class="text-gray-600 font-medium">Infracciones Hoy</h5>
+        <h2 class="text-3xl font-bold text-yellow-600">{{infraccionesHoy}}</h2>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md border-l-4 border-indigo-500 overflow-hidden">
+      <div class="p-4 text-center">
+        <h5 class="text-gray-600 font-medium">Artículos Infringidos</h5>
+        <h2 class="text-3xl font-bold text-indigo-600">{{totalArticulos}}</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos principales -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <!-- Infracciones por Carretera -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gray-100 px-4 py-3 border-b">
+        <h5 class="font-semibold text-gray-700">Infracciones por Carretera</h5>
+      </div>
+      <div class="p-4">
+        <canvas baseChart
+                [data]="infraccionesPorCarreteraChart"
+                [type]="'bar'"
+                [options]="barChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Infracciones por Importe -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gray-100 px-4 py-3 border-b">
+        <h5 class="font-semibold text-gray-700">Infracciones por Importe</h5>
+      </div>
+      <div class="p-4">
+        <canvas baseChart
+                [data]="infraccionesPorImporteChart"
+                [type]="'pie'"
+                [options]="pieChartOptions">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Segunda fila de gráficos -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <!-- Infracciones por Edad y Sexo -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gray-100 px-4 py-3 border-b">
+        <h5 class="font-semibold text-gray-700">Infracciones por Edad y Sexo</h5>
+      </div>
+      <div class="p-4">
+        <canvas baseChart
+                [data]="infraccionesPorEdadSexoChart"
+                [type]="'bar'"
+                [options]="barChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Infracciones por Vehículo -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gray-100 px-4 py-3 border-b">
+        <h5 class="font-semibold text-gray-700">Infracciones por Vehículo</h5>
+      </div>
+      <div class="p-4">
+        <canvas baseChart
+                [data]="infraccionesPorVehiculoChart"
+                [type]="'bar'"
+                [options]="barChartOptions">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Datos Detallados -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <!-- Artículos más Infringidos -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gray-100 px-4 py-3 border-b">
+        <h5 class="font-semibold text-gray-700">Artículos más Infringidos</h5>
+      </div>
+      <div class="p-4">
+        <ul class="divide-y divide-gray-200">
+          <li *ngFor="let articulo of articulosInfringidos" class="py-2 flex justify-between items-center">
+            <span class="text-gray-700">{{articulo}}</span>
+            <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs">{{getArticuloCount(articulo)}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Demografía de Infractores -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gray-100 px-4 py-3 border-b">
+        <h5 class="font-semibold text-gray-700">Demografía de Infractores</h5>
+      </div>
+      <div class="p-4 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Provincia</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Municipio</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edad</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sexo</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Infracciones</th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let item of demografiaInfractores" class="hover:bg-gray-50">
+            <td class="px-4 py-2 whitespace-nowrap">{{item.provinciaInfractor}}</td>
+            <td class="px-4 py-2 whitespace-nowrap">{{item.municipioInfractor}}</td>
+            <td class="px-4 py-2 whitespace-nowrap">{{item.edadInfractor}}</td>
+            <td class="px-4 py-2 whitespace-nowrap">{{item.sexoInfractor}}</td>
+            <td class="px-4 py-2 whitespace-nowrap">{{item.cantidadInfracciones}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalle de Infracciones por Unidad -->
+  <div class="mb-6">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="bg-gray-100 px-4 py-3 border-b flex justify-between items-center">
+        <h5 class="font-semibold text-gray-700">Infracciones por Unidad</h5>
+        <div>
+          <select class="bg-white border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  [(ngModel)]="unidadSeleccionada"
+                  (change)="cargarInfraccionesPorUnidad()">
+            <option value="1">Unidad 1</option>
+            <option value="2">Unidad 2</option>
+            <option value="3">Unidad 3</option>
+          </select>
+        </div>
+      </div>
+      <div class="p-4 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expediente</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agente</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Carretera</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Artículo</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Importe</th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let infraccion of infraccionesPorUnidad" class="hover:bg-gray-50">
+            <td class="px-4 py-2 whitespace-nowrap">{{infraccion.numeroExpediente}}</td>
+            <td class="px-4 py-2 whitespace-nowrap">{{infraccion.nombreAgente}}</td>
+            <td class="px-4 py-2 whitespace-nowrap">{{infraccion.carretera}}</td>
+            <td class="px-4 py-2 whitespace-nowrap">{{infraccion.articuloInfringido}}</td>
+            <td class="px-4 py-2 whitespace-nowrap">{{infraccion.importe | currency:'EUR'}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

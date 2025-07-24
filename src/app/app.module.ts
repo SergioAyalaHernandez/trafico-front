@@ -16,6 +16,7 @@ import { UnidadtransitoComponent } from './modules/dashboard/unidadtransito/unid
 import { AgentetransitoComponent } from './modules/dashboard/agentetransito/agentetransito.component';
 import { InfraccionComponent } from './modules/dashboard/infraccion/infraccion.component';
 import { BalanceComponent } from './modules/dashboard/balance/balance.component';
+import {NgChartsModule} from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { BalanceComponent } from './modules/dashboard/balance/balance.component'
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -7,6 +7,7 @@ import {VehiculoComponent} from "./modules/dashboard/vehiculo/vehiculo.component
 import {UnidadtransitoComponent} from "./modules/dashboard/unidadtransito/unidadtransito.component";
 import {AgentetransitoComponent} from "./modules/dashboard/agentetransito/agentetransito.component";
 import {InfraccionComponent} from "./modules/dashboard/infraccion/infraccion.component";
+import {BalanceComponent} from "./modules/dashboard/balance/balance.component";
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path: 'infraccion-transito',
     component: InfraccionComponent
+  },
+  {
+    path: 'balance',
+    component: BalanceComponent
   },
 ];
 

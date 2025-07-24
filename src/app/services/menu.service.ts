@@ -39,6 +39,13 @@ export class MenuService {
       children: [
         { icon: 'admin', label: 'Generar infracción', route: 'infraccion-transito' },
       ]
+    },
+    {
+      icon: 'user',
+      label: 'Cifras',
+      children: [
+        { icon: 'admin', label: 'Balance', route: 'balance' },
+      ]
     }
   ];
 
